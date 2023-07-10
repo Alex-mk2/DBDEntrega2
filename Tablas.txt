@@ -1,0 +1,150 @@
+-- Table: public.carrito_de_compras
+
+-- DROP TABLE IF EXISTS public.carrito_de_compras;
+
+CREATE TABLE IF NOT EXISTS public.carrito_de_compras
+(
+    id_carro integer NOT NULL,
+    num_productos integer NOT NULL,
+    id_metodo_pago integer NOT NULL,
+    id_cuenta integer NOT NULL,
+    id_libro integer NOT NULL,
+    CONSTRAINT carrito_de_compras_pkey PRIMARY KEY (id_carro),
+    CONSTRAINT id_cuenta FOREIGN KEY (id_cuenta)
+        REFERENCES public.cuenta (id_cuenta) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT id_libro FOREIGN KEY (id_libro)
+        REFERENCES public.libro (id_libro) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.carrito_de_compras
+    OWNER to postgres;
+
+-- Table: public.cuenta
+
+-- DROP TABLE IF EXISTS public.cuenta;
+
+CREATE TABLE IF NOT EXISTS public.cuenta
+(
+    id_cuenta integer NOT NULL,
+    libros_publicados integer NOT NULL,
+    libros_comprados integer NOT NULL,
+    id_boleta integer NOT NULL,
+    id_lista_f integer NOT NULL,
+    id_carrito integer NOT NULL,
+    CONSTRAINT cuenta_pkey PRIMARY KEY (id_cuenta)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.cuenta
+    OWNER to postgres;
+
+-- Table: public.cuentaXlibro
+
+-- DROP TABLE IF EXISTS public."cuentaXlibro";
+
+CREATE TABLE IF NOT EXISTS public."cuentaXlibro"
+(
+    id_libro integer NOT NULL,
+    id_cuenta integer NOT NULL
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."cuentaXlibro"
+    OWNER to postgres;
+
+-- Table: public.libro
+
+-- DROP TABLE IF EXISTS public.libro;
+
+CREATE TABLE IF NOT EXISTS public.libro
+(
+    id_libro integer NOT NULL,
+    autor character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    titulo character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    visitas character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    precio integer NOT NULL,
+    stock integer NOT NULL,
+    id_ranking integer NOT NULL,
+    id_lista_f integer NOT NULL,
+    CONSTRAINT libro_pkey PRIMARY KEY (id_libro),
+    CONSTRAINT id_ranking_fk FOREIGN KEY (id_ranking)
+        REFERENCES public.ranking_visualizacion (id_ranking) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.libro
+    OWNER to postgres;
+
+-- Table: public.metodo_de_pago
+
+-- DROP TABLE IF EXISTS public.metodo_de_pago;
+
+CREATE TABLE IF NOT EXISTS public.metodo_de_pago
+(
+    id_metodo_de_pago integer NOT NULL,
+    tipo_de_pago character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    estado_pago boolean NOT NULL,
+    id_boleta integer NOT NULL,
+    CONSTRAINT metodo_de_pago_pkey PRIMARY KEY (id_metodo_de_pago)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.metodo_de_pago
+    OWNER to postgres;
+
+
+-- Table: public.ranking_visualizacion
+
+-- DROP TABLE IF EXISTS public.ranking_visualizacion;
+
+CREATE TABLE IF NOT EXISTS public.ranking_visualizacion
+(
+    id_ranking integer NOT NULL,
+    titulo_ranking character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    puntuacion_promedio integer NOT NULL,
+    CONSTRAINT ranking_visualizacion_pkey PRIMARY KEY (id_ranking)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.ranking_visualizacion
+    OWNER to postgres;
+
+-- Table: public.usuario
+
+-- DROP TABLE IF EXISTS public.usuario;
+
+CREATE TABLE IF NOT EXISTS public.usuario
+(
+    id_usuario integer NOT NULL,
+    correo character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    password character varying(15) COLLATE pg_catalog."default" NOT NULL,
+    fecha_nacimiento date NOT NULL,
+    id_cuenta integer NOT NULL,
+    CONSTRAINT usuario_pkey PRIMARY KEY (id_usuario),
+    CONSTRAINT id_cuenta FOREIGN KEY (id_cuenta)
+        REFERENCES public.cuenta (id_cuenta) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.usuario
+    OWNER to postgres;
