@@ -1,0 +1,47 @@
+-------------/Tabla Ranking Visualizacion/-------------
+
+-- Table: public.ranking_visualizacion
+
+-- DROP TABLE IF EXISTS public.ranking_visualizacion;
+
+CREATE TABLE IF NOT EXISTS public.ranking_visualizacion
+(
+    id_ranking integer NOT NULL,
+    titulo_ranking character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    puntuacion_promedio integer NOT NULL,
+    CONSTRAINT ranking_visualizacion_pkey PRIMARY KEY (id_ranking)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.ranking_visualizacion
+    OWNER to postgres;
+
+-------------/Tabla Libro/-------------
+
+-- Table: public.libro
+
+-- DROP TABLE IF EXISTS public.libro;
+
+CREATE TABLE IF NOT EXISTS public.libro
+(
+    id_libro integer NOT NULL,
+    autor character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    titulo character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    visitas character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    precio integer NOT NULL,
+    stock integer NOT NULL,
+    id_ranking integer NOT NULL,
+    id_lista_f integer NOT NULL,
+    CONSTRAINT libro_pkey PRIMARY KEY (id_libro),
+    CONSTRAINT id_ranking_fk FOREIGN KEY (id_ranking)
+        REFERENCES public.ranking_visualizacion (id_ranking) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.libro
+    OWNER to postgres;

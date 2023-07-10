@@ -1,0 +1,7 @@
+INSERT INTO public.ranking_visualizacion(id_ranking, titulo_ranking, puntuacion_promedio) VALUES(1, 'Youtubers', '89');
+INSERT INTO public.ranking_visualizacion(id_ranking, titulo_ranking, puntuacion_promedio) VALUES(2, 'Fantasia', '94');
+
+INSERT INTO public.libro(id_libro, autor, titulo, visitas, precio, stock, id_ranking, id_lista_f) VALUES( 1, 'Rubius', 'El libro troll', 777, 9990, 5, 1, 1);
+INSERT INTO public.libro(id_libro, autor, titulo, visitas, precio, stock, id_ranking, id_lista_f) VALUES( 2, 'J.k Rowling', 'Harry Potter y el caliz de fuego', 1000, 19990, 20, 2, 1);
+
+
