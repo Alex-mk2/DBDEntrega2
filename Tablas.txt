@@ -7,16 +7,21 @@ CREATE TABLE IF NOT EXISTS public.carrito_de_compras
     id_carro integer NOT NULL,
     num_productos integer NOT NULL,
     id_metodo_pago integer NOT NULL,
-    id_cuenta integer NOT NULL,
+    id_usuario integer NOT NULL,
     id_libro integer NOT NULL,
     CONSTRAINT carrito_de_compras_pkey PRIMARY KEY (id_carro),
-    CONSTRAINT id_cuenta FOREIGN KEY (id_cuenta)
-        REFERENCES public.cuenta (id_cuenta) MATCH SIMPLE
+    CONSTRAINT id_libro FOREIGN KEY (id_libro)
+        REFERENCES public.libro (id_libro) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
-    CONSTRAINT id_libro FOREIGN KEY (id_libro)
-        REFERENCES public.libro (id_libro) MATCH SIMPLE
+    CONSTRAINT id_metodo_pago FOREIGN KEY (id_metodo_pago)
+        REFERENCES public.metodo_pago (id_metodo_pago) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT id_usuario FOREIGN KEY (id_usuario)
+        REFERENCES public.usuario (id_usuario) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -27,41 +32,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.carrito_de_compras
     OWNER to postgres;
 
--- Table: public.cuenta
-
--- DROP TABLE IF EXISTS public.cuenta;
-
-CREATE TABLE IF NOT EXISTS public.cuenta
-(
-    id_cuenta integer NOT NULL,
-    libros_publicados integer NOT NULL,
-    libros_comprados integer NOT NULL,
-    id_boleta integer NOT NULL,
-    id_lista_f integer NOT NULL,
-    id_carrito integer NOT NULL,
-    CONSTRAINT cuenta_pkey PRIMARY KEY (id_cuenta)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.cuenta
-    OWNER to postgres;
-
--- Table: public.cuentaXlibro
-
--- DROP TABLE IF EXISTS public."cuentaXlibro";
-
-CREATE TABLE IF NOT EXISTS public."cuentaXlibro"
-(
-    id_libro integer NOT NULL,
-    id_cuenta integer NOT NULL
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."cuentaXlibro"
-    OWNER to postgres;
-
 -- Table: public.libro
 
 -- DROP TABLE IF EXISTS public.libro;
@@ -69,16 +39,27 @@ ALTER TABLE IF EXISTS public."cuentaXlibro"
 CREATE TABLE IF NOT EXISTS public.libro
 (
     id_libro integer NOT NULL,
-    autor character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    titulo character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    visitas character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    autor character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    titulo character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    visitas integer NOT NULL,
     precio integer NOT NULL,
     stock integer NOT NULL,
-    id_ranking integer NOT NULL,
-    id_lista_f integer NOT NULL,
+    id_ranking_fav integer NOT NULL,
+    id_ranking_vis integer NOT NULL,
+    id_usuario integer NOT NULL,
     CONSTRAINT libro_pkey PRIMARY KEY (id_libro),
-    CONSTRAINT id_ranking_fk FOREIGN KEY (id_ranking)
-        REFERENCES public.ranking_visualizacion (id_ranking) MATCH SIMPLE
+    CONSTRAINT id_ranking_fav FOREIGN KEY (id_ranking_fav)
+        REFERENCES public.ranking_visitas (id_ranking_vis) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT id_ranking_vis FOREIGN KEY (id_ranking_vis)
+        REFERENCES public.ranking_visitas (id_ranking_vis) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT id_usuario FOREIGN KEY (id_usuario)
+        REFERENCES public.usuario (id_usuario) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -89,41 +70,114 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.libro
     OWNER to postgres;
 
--- Table: public.metodo_de_pago
+-- Table: public.lista_favoritos
 
--- DROP TABLE IF EXISTS public.metodo_de_pago;
+-- DROP TABLE IF EXISTS public.lista_favoritos;
 
-CREATE TABLE IF NOT EXISTS public.metodo_de_pago
+CREATE TABLE IF NOT EXISTS public.lista_favoritos
 (
-    id_metodo_de_pago integer NOT NULL,
-    tipo_de_pago character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    id_lista_fav integer NOT NULL,
+    cantidad integer NOT NULL,
+    nombre_lista character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    id_usuario integer NOT NULL,
+    CONSTRAINT lista_favoritos_pkey PRIMARY KEY (id_lista_fav),
+    CONSTRAINT id_usuario FOREIGN KEY (id_usuario)
+        REFERENCES public.usuario (id_usuario) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.lista_favoritos
+    OWNER to postgres;
+
+
+-- Table: public.lista_libro
+
+-- DROP TABLE IF EXISTS public.lista_libro;
+
+CREATE TABLE IF NOT EXISTS public.lista_libro
+(
+    id_lista_fav integer NOT NULL,
+    id_libro integer NOT NULL,
+    CONSTRAINT lista_libro_pkey PRIMARY KEY (id_lista_fav),
+    CONSTRAINT id_libro FOREIGN KEY (id_libro)
+        REFERENCES public.libro (id_libro) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT id_lista_fav FOREIGN KEY (id_lista_fav)
+        REFERENCES public.lista_favoritos (id_lista_fav) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.lista_libro
+    OWNER to postgres;
+
+
+-- Table: public.metodo_pago
+
+-- DROP TABLE IF EXISTS public.metodo_pago;
+
+CREATE TABLE IF NOT EXISTS public.metodo_pago
+(
+    id_metodo_pago integer NOT NULL,
+    tipo_pago character varying(30) COLLATE pg_catalog."default" NOT NULL,
     estado_pago boolean NOT NULL,
-    id_boleta integer NOT NULL,
-    CONSTRAINT metodo_de_pago_pkey PRIMARY KEY (id_metodo_de_pago)
+    id_boletas integer NOT NULL,
+    CONSTRAINT metodo_pago_pkey PRIMARY KEY (id_metodo_pago)
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.metodo_de_pago
+ALTER TABLE IF EXISTS public.metodo_pago
     OWNER to postgres;
 
 
--- Table: public.ranking_visualizacion
+-- Table: public.ranking_favoritos
 
--- DROP TABLE IF EXISTS public.ranking_visualizacion;
+-- DROP TABLE IF EXISTS public.ranking_favoritos;
 
-CREATE TABLE IF NOT EXISTS public.ranking_visualizacion
+CREATE TABLE IF NOT EXISTS public.ranking_favoritos
 (
-    id_ranking integer NOT NULL,
-    titulo_ranking character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    puntuacion_promedio integer NOT NULL,
-    CONSTRAINT ranking_visualizacion_pkey PRIMARY KEY (id_ranking)
+    id_ranking_fav integer NOT NULL,
+    puntuacion integer NOT NULL,
+    id_lista_fav integer NOT NULL,
+    CONSTRAINT ranking_favoritos_pkey PRIMARY KEY (id_ranking_fav),
+    CONSTRAINT id_lista_fav FOREIGN KEY (id_lista_fav)
+        REFERENCES public.lista_favoritos (id_lista_fav) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.ranking_visualizacion
+ALTER TABLE IF EXISTS public.ranking_favoritos
     OWNER to postgres;
+
+-- Table: public.ranking_visitas
+
+-- DROP TABLE IF EXISTS public.ranking_visitas;
+
+CREATE TABLE IF NOT EXISTS public.ranking_visitas
+(
+    id_ranking_vis integer NOT NULL,
+    valoracion integer NOT NULL,
+    CONSTRAINT ranking_visitas_pkey PRIMARY KEY (id_ranking_vis)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.ranking_visitas
+    OWNER to postgres;
+
 
 -- Table: public.usuario
 
@@ -132,13 +186,37 @@ ALTER TABLE IF EXISTS public.ranking_visualizacion
 CREATE TABLE IF NOT EXISTS public.usuario
 (
     id_usuario integer NOT NULL,
-    correo character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    password character varying(15) COLLATE pg_catalog."default" NOT NULL,
+    nombre character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    correo character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    passw character varying(15) COLLATE pg_catalog."default" NOT NULL,
+    telefono character varying(12) COLLATE pg_catalog."default",
     fecha_nacimiento date NOT NULL,
-    id_cuenta integer NOT NULL,
-    CONSTRAINT usuario_pkey PRIMARY KEY (id_usuario),
-    CONSTRAINT id_cuenta FOREIGN KEY (id_cuenta)
-        REFERENCES public.cuenta (id_cuenta) MATCH SIMPLE
+    id_ubicacion integer NOT NULL,
+    CONSTRAINT usuario_pkey PRIMARY KEY (id_usuario)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.usuario
+    OWNER to postgres;
+
+
+-- Table: public.usuario_libro
+
+-- DROP TABLE IF EXISTS public.usuario_libro;
+
+CREATE TABLE IF NOT EXISTS public.usuario_libro
+(
+    id_libro integer NOT NULL,
+    id_usuario integer NOT NULL,
+    CONSTRAINT usuario_libro_pkey PRIMARY KEY (id_libro),
+    CONSTRAINT id_libro FOREIGN KEY (id_libro)
+        REFERENCES public.libro (id_libro) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT id_usuario FOREIGN KEY (id_usuario)
+        REFERENCES public.usuario (id_usuario) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -146,5 +224,5 @@ CREATE TABLE IF NOT EXISTS public.usuario
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.usuario
+ALTER TABLE IF EXISTS public.usuario_libro
     OWNER to postgres;
