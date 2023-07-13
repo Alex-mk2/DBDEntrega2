@@ -1,3 +1,58 @@
+-- Table: public.ubicacion
+
+-- DROP TABLE IF EXISTS public.ubicacion;
+
+CREATE TABLE IF NOT EXISTS public.ubicacion
+(
+    id_ubicacion integer NOT NULL,
+    pais character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    ciudad character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT ubicacion_pkey PRIMARY KEY (id_ubicacion)
+)
+
+-- Table: public.restriccion
+
+-- DROP TABLE IF EXISTS public.restriccion;
+
+CREATE TABLE IF NOT EXISTS public.restriccion
+(
+    id_restriccion integer NOT NULL,
+    edad_minima integer NOT NULL,
+    CONSTRAINT restriccion_pkey PRIMARY KEY (id_restriccion)
+)
+
+-- Table: public.restriccion_ubicacion
+
+-- DROP TABLE IF EXISTS public.restriccion_ubicacion;
+
+CREATE TABLE IF NOT EXISTS public.restriccion_ubicacion
+(
+    id_restriccion integer NOT NULL,
+    id_ubicacion integer NOT NULL,
+    CONSTRAINT id_restriccion FOREIGN KEY (id_restriccion)
+        REFERENCES public.restriccion (id_restriccion) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT  id_ubicacion FOREIGN KEY (id_ubicacion)
+        REFERENCES public.ubicacion (id_ubicacion) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+-- Table: public.categoria
+
+-- DROP TABLE IF EXISTS public.categoria;
+
+CREATE TABLE IF NOT EXISTS public.categoria
+(
+    id_categoria integer NOT NULL,
+    nombre_categoria character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    descripcion_categoria character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT categoria_pkey PRIMARY KEY (id_categoria)
+)
+
 -- Table: public.carrito_de_compras
 
 -- DROP TABLE IF EXISTS public.carrito_de_compras;
@@ -69,6 +124,45 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.libro
     OWNER to postgres;
+
+-- Table: public.categoria_libro
+
+-- DROP TABLE IF EXISTS public.categoria_libro;
+
+CREATE TABLE IF NOT EXISTS public.categoria_libro
+(
+    id_categoria integer NOT NULL,
+    id_libro integer NOT NULL,
+    CONSTRAINT id_categoria FOREIGN KEY (id_categoria)
+        REFERENCES public.categoria (id_categoria) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT  id_libro FOREIGN KEY (id_libro)
+        REFERENCES public.libro (id_libro) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+-- Table: public.libro_restriccion
+-- DROP TABLE IF EXISTS public.libro_restriccion;
+
+CREATE TABLE IF NOT EXISTS public.libro_restriccion
+(
+    id_libro integer NOT NULL,
+    id_restriccion integer NOT NULL,
+    CONSTRAINT  id_libro FOREIGN KEY (id_libro)
+        REFERENCES public.libro (id_libro) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT id_restriccion FOREIGN KEY (id_restriccion)
+        REFERENCES public.restriccion (id_restriccion) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+)
 
 -- Table: public.lista_favoritos
 
