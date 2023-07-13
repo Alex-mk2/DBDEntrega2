@@ -96,23 +96,12 @@ CREATE TABLE IF NOT EXISTS public.libro
     id_libro integer NOT NULL,
     autor character varying(50) COLLATE pg_catalog."default" NOT NULL,
     titulo character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    visitas integer NOT NULL,
     precio integer NOT NULL,
     stock integer NOT NULL,
-    id_ranking_fav integer NOT NULL,
-    id_ranking_vis integer NOT NULL,
+    visitas integer NOT NULL,
+    favoritos integer NOT NULL,
     id_usuario integer NOT NULL,
     CONSTRAINT libro_pkey PRIMARY KEY (id_libro),
-    CONSTRAINT id_ranking_fav FOREIGN KEY (id_ranking_fav)
-        REFERENCES public.ranking_visitas (id_ranking_vis) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT id_ranking_vis FOREIGN KEY (id_ranking_vis)
-        REFERENCES public.ranking_visitas (id_ranking_vis) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
     CONSTRAINT id_usuario FOREIGN KEY (id_usuario)
         REFERENCES public.usuario (id_usuario) MATCH SIMPLE
         ON UPDATE NO ACTION
