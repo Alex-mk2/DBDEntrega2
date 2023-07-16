@@ -111,22 +111,28 @@ CREATE TABLE restriccion_ubicacion (
 );
 
 CREATE TABLE carrito_compra (
-    id_carro SERIAL PRIMARY KEY,
-    num_productos INT NOT NULL,
+    id_carrito SERIAL PRIMARY KEY,
+    fecha_creacion date NOT NULL,
     id_metodo_pago INT NOT NULL,
     id_usuario INT NOT NULL,
-    id_libro INT NOT NULL,
     FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago),
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_libro) REFERENCES libro(id_libro)
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+);
+
+CREATE TABLE libro_carrito (
+    id_libro INT,
+    id_carrito INT,
+    FOREIGN KEY (id_libro) REFERENCES libro(id_libro),
+    FOREIGN KEY (id_carrito) REFERENCES carrito_compra(id_carrito)
 );
 
 CREATE TABLE boleta (
     id_boleta SERIAL PRIMARY KEY,
+    fecha_pago date NOT NULL,
     resumen_compra VARCHAR(255) NOT NULL,
     total_pagado INT NOT NULL,
-    id_carro INT NOT NULL,
+    id_carrito INT NOT NULL,
     id_usuario INT NOT NULL,
-    FOREIGN KEY (id_carro) REFERENCES carrito_compra(id_carro),
+    FOREIGN KEY (id_carrito) REFERENCES carrito_compra(id_carrito),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
