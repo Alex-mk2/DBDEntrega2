@@ -203,7 +203,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.lista_libro
     OWNER to postgres;
 
-
 -- Table: public.metodo_pago
 
 -- DROP TABLE IF EXISTS public.metodo_pago;
@@ -221,46 +220,6 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.metodo_pago
     OWNER to postgres;
-
-
--- Table: public.ranking_favoritos
-
--- DROP TABLE IF EXISTS public.ranking_favoritos;
-
-CREATE TABLE IF NOT EXISTS public.ranking_favoritos
-(
-    id_ranking_fav integer NOT NULL,
-    puntuacion integer NOT NULL,
-    id_lista_fav integer NOT NULL,
-    CONSTRAINT ranking_favoritos_pkey PRIMARY KEY (id_ranking_fav),
-    CONSTRAINT id_lista_fav FOREIGN KEY (id_lista_fav)
-        REFERENCES public.lista_favoritos (id_lista_fav) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.ranking_favoritos
-    OWNER to postgres;
-
--- Table: public.ranking_visitas
-
--- DROP TABLE IF EXISTS public.ranking_visitas;
-
-CREATE TABLE IF NOT EXISTS public.ranking_visitas
-(
-    id_ranking_vis integer NOT NULL,
-    valoracion integer NOT NULL,
-    CONSTRAINT ranking_visitas_pkey PRIMARY KEY (id_ranking_vis)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.ranking_visitas
-    OWNER to postgres;
-
 
 -- Table: public.usuario
 

@@ -58,18 +58,18 @@ CREATE TABLE IF NOT EXISTS public.libro_restriccion
 
 CREATE TABLE IF NOT EXISTS public.lista_favoritos
 (
-    id_lista_fav integer NOT NULL,
+    id_lista_f integer NOT NULL,
     cantidad integer NOT NULL,
     nombre_lista character varying(50) COLLATE pg_catalog."default" NOT NULL,
     id_usuario integer NOT NULL,
-    CONSTRAINT lista_favoritos_pkey PRIMARY KEY (id_lista_fav)
+    CONSTRAINT lista_favoritos_pkey PRIMARY KEY (id_lista_f)
 );
 
 CREATE TABLE IF NOT EXISTS public.lista_libro
 (
-    id_lista_fav integer NOT NULL,
+    id_lista_f integer NOT NULL,
     id_libro integer NOT NULL,
-    CONSTRAINT lista_libro_pkey PRIMARY KEY (id_lista_fav)
+    CONSTRAINT lista_libro_pkey PRIMARY KEY (id_lista_f)
 );
 
 CREATE TABLE IF NOT EXISTS public.metodo_pago
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS public.ubicacion
 (
     id_ubicacion integer NOT NULL,
     pais character varying(30) COLLATE pg_catalog."default" NOT NULL,
-    cuidad character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    ciudad character varying(30) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT ubicacion_pkey PRIMARY KEY (id_ubicacion)
 );
 
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS public.usuario
     id_usuario integer NOT NULL,
     nombre character varying(30) COLLATE pg_catalog."default" NOT NULL,
     correo character varying(30) COLLATE pg_catalog."default" NOT NULL,
-    passw character varying(15) COLLATE pg_catalog."default" NOT NULL,
+    contrasena character varying(15) COLLATE pg_catalog."default" NOT NULL,
     telefono character varying(12) COLLATE pg_catalog."default",
     fecha_nacimiento date NOT NULL,
     id_ubicacion integer NOT NULL,
@@ -166,7 +166,7 @@ ALTER TABLE IF EXISTS public.boleta
     ADD CONSTRAINT id_usuario FOREIGN KEY (id_usuario)
     REFERENCES public.usuario (id_usuario) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE NO ACTIONid_catego
     NOT VALID;
 
 
@@ -195,7 +195,7 @@ ALTER TABLE IF EXISTS public.carrito_de_compras
 
 
 ALTER TABLE IF EXISTS public.categoria_libro
-    ADD CONSTRAINT id_categeria FOREIGN KEY (id_categoria)
+    ADD CONSTRAINT id_categoria FOREIGN KEY (id_categoria)
     REFERENCES public.categoria (id_categoria) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -251,13 +251,13 @@ ALTER TABLE IF EXISTS public.lista_libro
 
 
 ALTER TABLE IF EXISTS public.lista_libro
-    ADD CONSTRAINT id_lista_fav FOREIGN KEY (id_lista_fav)
-    REFERENCES public.lista_favoritos (id_lista_fav) MATCH SIMPLE
+    ADD CONSTRAINT id_lista_f FOREIGN KEY (id_lista_f)
+    REFERENCES public.lista_favoritos (id_lista_f) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 CREATE INDEX IF NOT EXISTS lista_libro_pkey
-    ON public.lista_libro(id_lista_fav);
+    ON public.lista_libro(id_lista_f);
 
 
 ALTER TABLE IF EXISTS public.resena
